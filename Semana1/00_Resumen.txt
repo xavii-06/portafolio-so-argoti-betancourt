@@ -1,0 +1,20 @@
+﻿DIAGNOSTICO DE WINDOWS
+
+Equipo: DESKTOP-315OGQI
+Usuario: xavie
+Fecha: 2026-10-09 17:04:44
+
+Estado: TODAS LAS CONSULTAS FINALIZARON
+Consultas completadas: 7 de 7
+Consultas con error: 0
+Consultas fallidas: Ninguno
+
+RESUMEN DEL HARDWARE
+Procesador: AMD Ryzen 5 4600H with Radeon Graphics
+Memoria RAM: 32,00 GB
+
+Discos fisicos:
+Micron_2210_MTFDHBA512QFD: 477 GB - Estado: Healthy
+
+Informe completo guardado en:
+C:\Users\xavie\Desktop\DiagnosticoWindows
