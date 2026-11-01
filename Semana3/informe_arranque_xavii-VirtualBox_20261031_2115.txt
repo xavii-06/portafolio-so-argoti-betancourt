@@ -1,0 +1,22 @@
+Informe de arranque · xavii-VirtualBox · 2026-10-31 21:15
+
+=== 1 · Sistema operativo, versión y núcleo ===
+Sistema: Linux Mint 22.3
+Núcleo:  7.0.0-38-generic (x86_64)
+
+=== 2 · Último arranque y tiempo encendido ===
+Arrancó:   2026-10-31 21:07:41
+Encendida: up 7 minutes
+
+=== 3 · Desglose del arranque (systemd-analyze) ===
+Startup finished in 3.597s (kernel) + 3.521s (userspace) = 7.119s 
+graphical.target reached after 3.433s in userspace.
+
+=== 4 · Las 5 unidades que más tardaron en arrancar ===
+PENDIENTE: sección 4
+
+=== 5 · Módulos del núcleo cargados ===
+PENDIENTE: sección 5
+
+=== 6 · Target por defecto y servicios fallidos ===
+PENDIENTE: sección 6
