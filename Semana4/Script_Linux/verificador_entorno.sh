@@ -149,32 +149,63 @@ seccion3() {
 }
 
 # --- 4 · Últimas 5 transacciones ----------------------- (en casa) -----------
+# dnf history list se lee sin sudo. head -n 7 = cabecera + línea de guiones + 5 filas.
+# Si dnf no existe o no puede leer el historial, avisa en lugar de fallar.
 seccion4() {
     titulo "4 · Últimas 5 transacciones de paquetes"
-    # Pista: «dnf -q history list» muestra el historial (se lee sin sudo).
-    #        Quédate con la cabecera y 5 filas (head -n 7).
-    # Si dnf no existe, usa «aviso» en lugar de fallar.
-    # TODO
-    echo "PENDIENTE: sección 4"
+
+    if ! tiene dnf; then
+        aviso "dnf no existe: no puedo mostrar el historial de transacciones"
+        return 0
+    fi
+
+    local historial
+    if historial="$(dnf -q history list 2>/dev/null)" && [[ -n "$historial" ]]; then
+        printf '%s\n' "$historial" | head -n 7
+    else
+        aviso "dnf no pudo leer el historial (¿sin permisos de lectura?)"
+    fi
 }
 
 # --- 5 · Qué falta y cómo instalarlo ------------------- (en casa) -----------
+# Solo MUESTRA los comandos: el script nunca ejecuta sudo ni instala nada.
+# Reto final del Taller 2: una sola línea que instala todo lo que falta.
 seccion5() {
     titulo "5 · Qué falta y cómo instalarlo"
-    # Pista: si ${#FALTAN[@]} es 0, escribe «No falta nada.».
-    #        Si no, para cada c en FALTAN muestra:  sudo dnf install -y ${PAQUETE[$c]}
-    # TODO
-    echo "PENDIENTE: sección 5"
+
+    if [[ ${#FALTAN[@]} -eq 0 ]]; then
+        echo "No falta nada."
+        return 0
+    fi
+
+    local c todos=()
+    echo "Falta instalar (uno por uno):"
+    for c in "${FALTAN[@]}"; do
+        echo "  sudo dnf install -y ${PAQUETE[$c]}"
+        todos+=("${PAQUETE[$c]}")
+    done
+
+    echo
+    echo "O todo de una sola vez:"
+    echo "  sudo dnf install -y ${todos[*]}"
 }
 
 # --- 6 · Resultado ------------------------------------- (en casa) -----------
+# X = herramientas encontradas, Y = herramientas requeridas.
+# return 0 si no falta nada y 1 si falta algo; ese valor llega a «exit» más abajo.
 seccion6() {
     titulo "6 · Resultado"
-    # Pista: muestra «Herramientas listas: X de Y».
-    #        Termina la función con «return 0» si no falta nada y «return 1» si falta algo.
-    # TODO
-    echo "PENDIENTE: sección 6"
-    return 0
+
+    local total=${#REQUERIDAS[@]}
+    local listas=$(( total - ${#FALTAN[@]} ))
+    echo "Herramientas listas: $listas de $total"
+
+    if [[ ${#FALTAN[@]} -eq 0 ]]; then
+        echo "Estado: entorno completo."
+        return 0
+    fi
+    echo "Estado: faltan -> ${FALTAN[*]}"
+    return 1
 }
 
 principal() {
@@ -184,22 +215,16 @@ principal() {
     seccion3
     seccion4
     seccion5
-    seccion6
+    seccion6          # debe ser la última: su «return» es el código de salida de principal
 }
 
 # principal corre dentro de la tubería; su código de salida queda en PIPESTATUS[0].
-principal | tee "$SALIDA"
+# «2>&1» mete también los avisos (salida 2) en el informe .txt y en la pantalla.
+principal 2>&1 | tee "$SALIDA"
 codigo=${PIPESTATUS[0]}
 echo
 echo "Informe guardado en: $SALIDA"
 exit "$codigo"
 
 # -----------------------------------------------------------------------------
-#  Subir al portafolio (GitHub), desde la carpeta del repositorio de la pareja:
-#    git pull
-#    git add semana04/verificador_entorno.sh semana04/verificador_*.txt
-#    git commit -m "Semana 4: verificador de entorno (Linux), secciones 1-3"
-#    git push
-#  Haz un commit al terminar el taller y otro al terminar en casa.
-#  Cada integrante hace al menos un commit con su parte (criterio de la rúbrica).
 # -----------------------------------------------------------------------------

@@ -136,30 +136,80 @@ function Seccion3 {
 # --- 4 · Últimas 5 instalaciones ----------------------- (en casa) -----------
 function Seccion4 {
     Titulo "4 · Últimas 5 instalaciones"
-    # Pista: ProgramasInstalados | Where-Object { $_.InstallDate } |
-    #        Sort-Object InstallDate -Descending | Select-Object -First 5 InstallDate, DisplayName, DisplayVersion
-    #        (InstallDate es texto aaaammdd: ordenarlo como texto funciona).
-    # TODO
-    "PENDIENTE: sección 4"
-}
 
+    $ultimas = @(
+        foreach ($p in (ProgramasInstalados)) {
+            $fecha = [datetime]::MinValue
+            $textoFecha = [string]$p.InstallDate
+
+            $valida = [datetime]::TryParseExact(
+                $textoFecha,
+                'yyyyMMdd',
+                [Globalization.CultureInfo]::InvariantCulture,
+                [Globalization.DateTimeStyles]::None,
+                [ref]$fecha
+            )
+
+            if ($valida) {
+                [pscustomobject]@{
+                    Fecha = $fecha.ToString('yyyyMMdd')
+                    FechaOrden = $fecha
+                    DisplayName = $p.DisplayName
+                    DisplayVersion = $p.DisplayVersion
+                }
+            }
+        }
+    )
+
+    if ($ultimas.Count -gt 0) {
+        $ultimas |
+            Sort-Object FechaOrden -Descending |
+            Select-Object -First 5 Fecha, DisplayName, DisplayVersion
+    }
+    else {
+        "No se encontraron fechas de instalación válidas."
+    }
+}
 # --- 5 · Qué falta y cómo instalarlo ------------------- (en casa) -----------
 function Seccion5 {
     Titulo "5 · Qué falta y cómo instalarlo"
-    # Pista: si $script:faltan.Count es 0, escribe «No falta nada.».
-    #        Si no, para cada uno:  "winget install --id {0} -e" -f $requeridas[$f]
-    # TODO
-    "PENDIENTE: sección 5"
+
+    if ($script:faltan.Count -eq 0) {
+        "No falta nada."
+    }
+    else {
+        "Herramientas que faltan y comandos para instalarlas:"
+
+        foreach ($f in $script:faltan) {
+            if ($f -eq 'winget') {
+                "Instalar App Installer desde Microsoft Store para disponer de winget."
+            }
+            else {
+                "winget install --id {0} -e" -f $requeridas[$f]
+            }
+        }
+    }
 }
 
 # --- 6 · Resultado ------------------------------------- (en casa) -----------
 function Seccion6 {
     Titulo "6 · Resultado"
-    # Pista: «Herramientas listas: X de Y» con $requeridas.Count y $script:faltan.Count.
-    # TODO
-    "PENDIENTE: sección 6"
+
+    $listas = $requeridas.Count - $script:faltan.Count
+
+    "Herramientas listas: $listas de $($requeridas.Count)"
+
+    if ($script:faltan.Count -eq 0) {
+        $script:codigoSalida = 0
+        "Código de salida: 0 (todas las herramientas están disponibles)"
+    }
+    else {
+        $script:codigoSalida = 1
+        "Código de salida: 1 (faltan herramientas)"
+    }
 }
 
+$script:codigoSalida = 1
 # Format-Table | Out-String convierte los objetos en texto para el informe.
 $informe = & {
     "Verificador de entorno · $equipo · $(Get-Date -Format 'yyyy-MM-dd HH:mm')"
@@ -174,7 +224,7 @@ $informe | Tee-Object -FilePath $salida
 ""
 "Informe guardado en: $salida"
 # Pista (sección 6): cambia la línea siguiente para salir con 1 si falta algo.
-exit 0
+exit $script:codigoSalida
 
 # -----------------------------------------------------------------------------
 #  Subir al portafolio (GitHub), desde la carpeta del repositorio de la pareja:

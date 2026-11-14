@@ -1,0 +1,46 @@
+Verificador de entorno · equipo · 2026-11-13 22:21
+
+=== 1 · Sistema y shell ===
+AVISO: no existe /etc/os-release: no puedo saber la distribución
+Distro:    desconocida
+Kernel:    3.6.10-5a1665c8.x86_64
+Bash:      5.3.15(2)-release
+Usuario:   xavie
+Equipo:    equipo
+
+=== 2 · Herramientas requeridas ===
+COMANDO   ESTADO   RUTA                   VERSION
+git       OK       /ucrt64/bin/git        git version 2.56.0.windows.2
+curl      OK       /ucrt64/bin/curl       WARNING: this libcurl is Debug-enabled, do not use in production
+python3   OK       /c/Users/xavie/AppData/Local/Microsoft/WindowsApps/python3 Python was not found; run without arguments to install from the Microsoft Store, or disable this shortcut from Settings > Apps > Advanced app settings > App execution aliases.
+jq        OK       /c/Users/xavie/AppData/Local/Microsoft/WinGet/Packages/jqlang.jq_Microsoft.Winget.Source_8wekyb3d8bbwe/jq jq-1.8.2
+strace    OK       /usr/bin/strace        strace
+tree      FALTA    -                      -
+
+=== 3 · Paquetes instalados y repositorios ===
+AVISO: rpm no existe: no puedo contar los paquetes instalados
+
+Repositorios habilitados:
+AVISO: dnf no existe: no puedo listar los repositorios
+
+Origen de cada herramienta instalada:
+COMANDO   PAQUETE                  REPOSITORIO
+git       -                        -
+curl      -                        -
+python3   -                        -
+jq        -                        -
+strace    -                        -
+
+=== 4 · Últimas 5 transacciones de paquetes ===
+AVISO: dnf no existe: no puedo mostrar el historial de transacciones
+
+=== 5 · Qué falta y cómo instalarlo ===
+Falta instalar (uno por uno):
+  sudo dnf install -y tree
+
+O todo de una sola vez:
+  sudo dnf install -y tree
+
+=== 6 · Resultado ===
+Herramientas listas: 5 de 6
+Estado: faltan -> tree
