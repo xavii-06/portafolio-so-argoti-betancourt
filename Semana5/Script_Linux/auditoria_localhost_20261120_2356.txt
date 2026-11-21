@@ -1,0 +1,43 @@
+Auditoria de seguridad - localhost - 2026-11-20 23:56
+
+=== 1 - Llavero maestro ===
+Cuentas con UID 0:
+root
+Miembros del grupo wheel:
+xaviii
+OK: solo root tiene UID 0.
+-> Seccion 1: OK
+
+=== 2 - Puertas abiertas ===
+Servicios TCP en escucha:
+*:9090 -> abierta a la red
+0.0.0.0:22 -> abierta a la red
+127.0.0.1:631 -> solo el equipo
+[::1]:631 -> solo el equipo
+[::]:22 -> abierta a la red
+OK: no se detectaron puertos riesgosos abiertos a la red.
+-> Seccion 2: OK
+
+=== 3 - Portero activo ===
+Estado de firewalld: active
+-> Seccion 3: OK
+
+=== 4 - Intentos fallidos (umbral: 5 por IP) ===
+Intentos fallidos por IP:
+     12 45.83.1.20
+      4 91.200.5.4
+      3 10.0.0.7
+      1 10.0.0.15
+ALERTA: 45.83.1.20 alcanzo 12 intentos fallidos.
+-> Seccion 4: ALERTA
+
+=== 5 - Veredicto ===
+Seccion 1: OK
+Seccion 2: OK
+Seccion 3: OK
+Seccion 4: ALERTA
+VEREDICTO GENERAL: ALERTA
+Secciones con alerta: 1
+Secciones pendientes: 0
+
+Informe guardado en: auditoria_localhost_20261120_2356.txt
